@@ -54,7 +54,7 @@ public class App extends Application {
         handleKeyboard(scene);
 
         // Make sure the application quits completely on close
-        stage.setOnCloseRequest(t -> CleanExit.doExit(this.gpioHelper.getGpioController()));
+        stage.setOnCloseRequest(t -> CleanExit.doExit(this.gpioHelper));
     }
 
     /**

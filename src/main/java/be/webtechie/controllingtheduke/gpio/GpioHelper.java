@@ -8,11 +8,6 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Series;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,14 +30,8 @@ public class GpioHelper {
     private GpioController gpioController;
 
     /**
-     * The Pi4J GPIO input and outputs.
-     */
-    private GpioPinDigitalOutput led = null;
-
-    /**
      * The GPIO handlers.
      */
-    private ButtonChangeEventListener buttonChangeEventListener = null;
     private DistanceSensorMeasurement distanceSensorMeasurement = null;
 
     /**
@@ -54,59 +43,28 @@ public class GpioHelper {
             this.gpioController = GpioFactory.getInstance();
 
             // Initialize the pins for the distance sensor and start thread
-            GpioPinDigitalOutput trigger = gpioController.provisionDigitalOutputPin(PIN_TRIGGER, "Trigger", PinState.LOW);
-            GpioPinDigitalInput echo = gpioController.provisionDigitalInputPin(PIN_ECHO, "Echo", PinPullResistance.PULL_UP);
+            GpioPinDigitalOutput trigger = gpioController
+                    .provisionDigitalOutputPin(PIN_TRIGGER, "Trigger", PinState.LOW);
+            GpioPinDigitalInput echo = gpioController
+                    .provisionDigitalInputPin(PIN_ECHO, "Echo", PinPullResistance.PULL_UP);
             this.distanceSensorMeasurement = new DistanceSensorMeasurement(trigger, echo);
-            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-            executorService.scheduleAtFixedRate(this.distanceSensorMeasurement, 1, 1, TimeUnit.SECONDS);
         } catch (UnsatisfiedLinkError | IllegalArgumentException ex) {
             logger.error("Problem with Pi4J! Probably running on non-Pi-device or Pi4J not installed. Error: {}",
                     ex.getMessage());
         }
     }
 
+    /**
+     * @return {@link GpioController}
+     */
     public GpioController getGpioController() {
         return this.gpioController;
     }
 
     /**
-     * Set the state of the LED.
-     *
-     * @param on Flag true if the LED must be switched on
+     * @return {@link DistanceSensorMeasurement}
      */
-    public void setLed(boolean on) {
-        if (this.led != null) {
-            if (on) {
-                this.led.high();
-            } else {
-                this.led.low();
-            }
-        }
-    }
-
-    /**
-     * Get the data from the button.
-     *
-     * @return {@link Series}
-     */
-    public Series<String, Number> getButtonEvents() {
-        if (this.buttonChangeEventListener != null) {
-            return this.buttonChangeEventListener.getData();
-        } else {
-            return new Series<>();
-        }
-    }
-
-    /**
-     * Get the data from the distance measurement.
-     *
-     * @return {@link Series}
-     */
-    public Series<String, Number> getDistanceMeasurements() {
-        if (this.distanceSensorMeasurement != null) {
-            return this.distanceSensorMeasurement.getData();
-        } else {
-            return new Series<>();
-        }
+    public DistanceSensorMeasurement getDistanceSensorMeasurement() {
+        return this.distanceSensorMeasurement;
     }
 }
