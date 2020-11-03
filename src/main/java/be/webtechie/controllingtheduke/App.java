@@ -3,49 +3,47 @@ package be.webtechie.controllingtheduke;
 import be.webtechie.controllingtheduke.gpio.GpioHelper;
 import be.webtechie.controllingtheduke.util.CleanExit;
 import be.webtechie.controllingtheduke.view.Duke;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * MoleculeSampleApp
  */
 public class App extends Application {
 
-    private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+    private static Logger logger = LogManager.getLogger(App.class);
 
     private GpioHelper gpioHelper;
     private Duke duke;
 
     private void handleKeyboard(Scene scene) {
         scene.setOnKeyPressed(event -> {
-            System.out.println(event.getCode());
+            logger.info("Key event: {}", event.getCode());
             switch (event.getCode()) {
                 case UP:
-                    this.duke.log(this.getTimestamp() + " move forward");
+                    this.duke.handleKeyChange("move forward");
                     break;
                 case DOWN:
-                    this.duke.log(this.getTimestamp() + " move backward");
+                    this.duke.handleKeyChange("move backward");
                     break;
+                default:
+                    // Key not used in this project
             }
         });
     }
 
-    private String getTimestamp() {
-        return this.dateFormat.format(new Date());
-    }
 
     @Override
     public void start(Stage stage) {
         Platform.setImplicitExit(true);
 
+        this.duke = new Duke();
         this.gpioHelper = new GpioHelper();
-        this.duke = new Duke(this.gpioHelper);
+        this.gpioHelper.getDistanceSensorMeasurement().addListener(this.duke);
 
         var scene = new Scene(this.duke, 640, 480);
         stage.setScene(scene);
@@ -55,6 +53,8 @@ public class App extends Application {
 
         // Make sure the application quits completely on close
         stage.setOnCloseRequest(t -> CleanExit.doExit(this.gpioHelper));
+
+        logger.info("Stage initialized");
     }
 
     /**
