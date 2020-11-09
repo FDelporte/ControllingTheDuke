@@ -5,6 +5,11 @@
 
 ![](scheme/duke-distancesensor.png)
 
+## Inspired by
+
+* [FXGL JavaFX 3D Basics: Snake Game](https://www.youtube.com/watch?v=mjfgGJHAuvI&feature=youtu.be)
+* [Mixing JavaFX 2D and 3D](https://stackoverflow.com/questions/22161586/javafx-embed-scene-in-scene)
+
 ## Running as Maven project on Raspberry Pi
 
 * Build the application with 

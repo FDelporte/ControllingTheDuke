@@ -2,7 +2,7 @@ package be.webtechie.controllingtheduke;
 
 import be.webtechie.controllingtheduke.gpio.GpioHelper;
 import be.webtechie.controllingtheduke.util.CleanExit;
-import be.webtechie.controllingtheduke.view.Duke;
+import be.webtechie.controllingtheduke.view.MainScreen;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -18,17 +18,17 @@ public class App extends Application {
     private static Logger logger = LogManager.getLogger(App.class);
 
     private GpioHelper gpioHelper;
-    private Duke duke;
+    private MainScreen mainScreen;
 
     private void handleKeyboard(Scene scene) {
         scene.setOnKeyPressed(event -> {
             logger.info("Key event: {}", event.getCode());
             switch (event.getCode()) {
                 case UP:
-                    this.duke.handleKeyChange("move forward");
+                    this.mainScreen.handleKeyChange(event.getCode(), "move forward");
                     break;
                 case DOWN:
-                    this.duke.handleKeyChange("move backward");
+                    this.mainScreen.handleKeyChange(event.getCode(), "move backward");
                     break;
                 default:
                     // Key not used in this project
@@ -41,11 +41,12 @@ public class App extends Application {
     public void start(Stage stage) {
         Platform.setImplicitExit(true);
 
-        this.duke = new Duke();
-        this.gpioHelper = new GpioHelper();
-        this.gpioHelper.getDistanceSensorMeasurement().addListener(this.duke);
+        this.mainScreen = new MainScreen();
 
-        var scene = new Scene(this.duke, 640, 480);
+        //this.gpioHelper = new GpioHelper();
+        //this.gpioHelper.getDistanceSensorMeasurement().addListener(this.mainScreen);
+
+        var scene = new Scene(this.mainScreen, 640, 480);
         stage.setScene(scene);
         stage.setTitle("JavaFX demo application on Raspberry Pi");
         stage.show();

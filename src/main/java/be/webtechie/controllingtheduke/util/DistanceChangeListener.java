@@ -1,5 +1,7 @@
 package be.webtechie.controllingtheduke.util;
 
+import be.webtechie.controllingtheduke.gpio.DistanceSensor;
+
 public interface DistanceChangeListener {
 
     enum DistanceChange {
@@ -8,6 +10,6 @@ public interface DistanceChangeListener {
         NONE
     }
 
-    void handleDistanceChange(DistanceChange distanceChange, float distance);
+    void handleDistanceChange(DistanceSensor distanceSensor, DistanceChange distanceChange, float distance);
 
 }

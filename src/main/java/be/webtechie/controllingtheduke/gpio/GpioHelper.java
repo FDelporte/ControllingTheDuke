@@ -1,14 +1,11 @@
 package be.webtechie.controllingtheduke.gpio;
 
-import be.webtechie.controllingtheduke.util.DistanceChangeListener;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,12 +17,6 @@ public class GpioHelper {
     private static final Logger logger = LogManager.getLogger(GpioHelper.class);
 
     /**
-     * The pins we are using in our example.
-     */
-    private static final Pin PIN_ECHO = RaspiPin.GPIO_05;       // BCM 24, Header pin 18
-    private static final Pin PIN_TRIGGER = RaspiPin.GPIO_01;    // BCM 18, Header pin 12
-
-    /**
      * The connected hardware components.
      */
     private GpioController gpioController;
@@ -33,7 +24,7 @@ public class GpioHelper {
     /**
      * The GPIO handlers.
      */
-    private DistanceSensorMeasurement distanceSensorMeasurement = null;
+    private DistanceMeasurements distanceMeasurements = null;
 
     /**
      * Constructor.
@@ -43,15 +34,22 @@ public class GpioHelper {
             // Initialize the GPIO controller
             this.gpioController = GpioFactory.getInstance();
 
-            // Initialize the pins for the distance sensor and start thread
-            GpioPinDigitalOutput trigger = gpioController
-                    .provisionDigitalOutputPin(PIN_TRIGGER, "Trigger", PinState.LOW);
-            GpioPinDigitalInput echo = gpioController
-                    .provisionDigitalInputPin(PIN_ECHO, "Echo", PinPullResistance.PULL_UP);
-            this.distanceSensorMeasurement = new DistanceSensorMeasurement(trigger, echo);
+            // Initialize the pins for the distance sensor and measurement scheduler
+            // BCM 24, Header pin 18
+            // BCM 18, Header pin 12
+            var sensor1 = new DistanceSensor(1,
+                    gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_05, "Trigger", PinState.LOW),
+                    gpioController.provisionDigitalInputPin(RaspiPin.GPIO_01, "Echo", PinPullResistance.PULL_UP)
+            );
+            // BCM 24, Header pin 18
+            // BCM 18, Header pin 12
+            var sensor2 = new DistanceSensor(2,
+                    gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_05, "Trigger", PinState.LOW),
+                    gpioController.provisionDigitalInputPin(RaspiPin.GPIO_01, "Echo", PinPullResistance.PULL_UP)
+            );
+            this.distanceMeasurements = new DistanceMeasurements(Arrays.asList(sensor1, sensor2));
         } catch (UnsatisfiedLinkError | IllegalArgumentException ex) {
-            logger.error("Problem with Pi4J! Probably running on non-Pi-device or Pi4J not installed. Error: {}",
-                    ex.getMessage());
+            logger.error("Probably running on non-Pi-device or Pi4J not installed: {}", ex.getMessage());
         }
     }
 
@@ -63,9 +61,9 @@ public class GpioHelper {
     }
 
     /**
-     * @return {@link DistanceSensorMeasurement}
+     * @return {@link DistanceMeasurements}
      */
-    public DistanceSensorMeasurement getDistanceSensorMeasurement() {
-        return this.distanceSensorMeasurement;
+    public DistanceMeasurements getDistanceSensorMeasurement() {
+        return this.distanceMeasurements;
     }
 }
