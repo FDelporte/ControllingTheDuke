@@ -36,14 +36,14 @@ public class MainScreen extends HBox implements DistanceChangeListener {
                 .prefSize(200, 200)
                 .title("Distance sensor 1")
                 .unit("cm")
-                .maxValue(255)
+                .maxValue(50)
                 .build();
         this.distance2Tile = TileBuilder.create()
                 .skinType(SkinType.GAUGE)
                 .prefSize(200, 200)
                 .title("Distance sensor 2")
                 .unit("cm")
-                .maxValue(255)
+                .maxValue(50)
                 .build();
         tiles.getChildren().addAll(
                 TileBuilder.create()

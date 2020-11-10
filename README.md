@@ -1,9 +1,9 @@
-# Java FX 3D application to control Duke with a distance sensor
+# Java FX 3D application to control a game and the Duke with a distance sensor
 
 
 ## Wiring
 
-![](scheme/duke-distancesensor.png)
+![](scheme/dual-distancesensor.png)
 
 ## Inspired by
 

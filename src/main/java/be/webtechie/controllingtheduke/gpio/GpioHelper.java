@@ -35,17 +35,17 @@ public class GpioHelper {
             this.gpioController = GpioFactory.getInstance();
 
             // Initialize the pins for the distance sensor and measurement scheduler
-            // BCM 24, Header pin 18
-            // BCM 18, Header pin 12
+            // Trigger - WPI  4 - BCM 23, Header pin 16
+            // Echo    - WPI  5 - BCM 24, Header pin 18
             var sensor1 = new DistanceSensor(1,
-                    gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_05, "Trigger", PinState.LOW),
-                    gpioController.provisionDigitalInputPin(RaspiPin.GPIO_01, "Echo", PinPullResistance.PULL_UP)
+                    gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_04, "Trigger", PinState.LOW),
+                    gpioController.provisionDigitalInputPin(RaspiPin.GPIO_05, "Echo", PinPullResistance.PULL_UP)
             );
-            // BCM 24, Header pin 18
-            // BCM 18, Header pin 12
+            // Trigger - WPI 27 - BCM 16, Header pin 36
+            // Echo    - WPI 28 - BCM 20, Header pin 38
             var sensor2 = new DistanceSensor(2,
-                    gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_05, "Trigger", PinState.LOW),
-                    gpioController.provisionDigitalInputPin(RaspiPin.GPIO_01, "Echo", PinPullResistance.PULL_UP)
+                    gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_27, "Trigger", PinState.LOW),
+                    gpioController.provisionDigitalInputPin(RaspiPin.GPIO_28, "Echo", PinPullResistance.PULL_UP)
             );
             this.distanceMeasurements = new DistanceMeasurements(Arrays.asList(sensor1, sensor2));
         } catch (UnsatisfiedLinkError | IllegalArgumentException ex) {

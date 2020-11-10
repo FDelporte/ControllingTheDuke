@@ -43,8 +43,8 @@ public class App extends Application {
 
         this.mainScreen = new MainScreen();
 
-        //this.gpioHelper = new GpioHelper();
-        //this.gpioHelper.getDistanceSensorMeasurement().addListener(this.mainScreen);
+        this.gpioHelper = new GpioHelper();
+        this.gpioHelper.getDistanceSensorMeasurement().addListener(this.mainScreen);
 
         var scene = new Scene(this.mainScreen, 640, 480);
         stage.setScene(scene);

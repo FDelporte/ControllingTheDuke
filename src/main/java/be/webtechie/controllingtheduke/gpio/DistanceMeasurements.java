@@ -42,7 +42,7 @@ public class DistanceMeasurements {
 
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(distanceSensors.size());
         for (DistanceSensor distanceSensor : distanceSensors) {
-            executorService.scheduleAtFixedRate(new RunMeasurement(distanceSensor), 1000, 250, TimeUnit.MILLISECONDS);
+            executorService.scheduleAtFixedRate(new RunMeasurement(distanceSensor), 1000, 1000, TimeUnit.MILLISECONDS);
         }
 
         logger.info("Distance measurement initialized");
@@ -77,7 +77,7 @@ public class DistanceMeasurements {
 
     private class RunMeasurement implements Runnable {
 
-        private static final int TIME_OUT = 250;
+        private static final long TIME_OUT = 250 * 1000000000;
         private final DistanceSensor distanceSensor;
 
         public RunMeasurement(DistanceSensor distanceSensor) {
