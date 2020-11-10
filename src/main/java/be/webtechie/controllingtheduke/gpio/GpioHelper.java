@@ -1,5 +1,6 @@
 package be.webtechie.controllingtheduke.gpio;
 
+import be.webtechie.controllingtheduke.util.DistanceChangeListener;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.PinPullResistance;
@@ -54,16 +55,21 @@ public class GpioHelper {
     }
 
     /**
+     * Add a listener for the distance changes.
+     *
+     * @param listener {@link DistanceChangeListener}
+     */
+    public void addListener(DistanceChangeListener listener) {
+        if (this.distanceMeasurements == null) {
+            return;
+        }
+        this.distanceMeasurements.addListener(listener);
+    }
+
+    /**
      * @return {@link GpioController}
      */
     public GpioController getGpioController() {
         return this.gpioController;
-    }
-
-    /**
-     * @return {@link DistanceMeasurements}
-     */
-    public DistanceMeasurements getDistanceSensorMeasurement() {
-        return this.distanceMeasurements;
     }
 }

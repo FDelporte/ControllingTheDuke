@@ -18,7 +18,7 @@ public class CleanExit {
      * @param gpioHelper {@link GpioHelper}
      */
     public static void doExit(GpioHelper gpioHelper) {
-        if (gpioHelper != null) {
+        if (gpioHelper != null && gpioHelper.getGpioController() != null) {
             gpioHelper.getGpioController().shutdown();
         }
         Platform.exit();
