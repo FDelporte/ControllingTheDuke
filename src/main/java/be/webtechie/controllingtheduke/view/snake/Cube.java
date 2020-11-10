@@ -17,4 +17,10 @@ public class Cube extends Box {
         setTranslateY(p.getY());
         setTranslateZ(p.getZ());
     }
+
+    public boolean isColliding(Cube c) {
+        return getTranslateX() == c.getTranslateX()
+                && getTranslateY() == c.getTranslateY()
+                && getTranslateZ() == c.getTranslateZ();
+    }
 }
