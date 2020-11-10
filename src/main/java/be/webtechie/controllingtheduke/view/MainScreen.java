@@ -66,7 +66,7 @@ public class MainScreen extends HBox implements DistanceChangeListener {
         this.lblDistance1 = new Label();
         this.lblDistance2 = new Label();
         labels.getChildren().addAll(this.lblKey, this.lblDistance1, this.lblDistance2,
-                new SnakeGame());
+                new SnakeGame(800, 600));
     }
 
     public void handleKeyChange(KeyCode keyCode, String txt) {

@@ -8,19 +8,25 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * JavaFX 3D Snake game as explained by Almas Baimagambetov on
- * https://www.youtube.com/watch?v=mjfgGJHAuvI&feature=youtu.be
+ * JavaFX 3D Snake game as explained by Almas Baimagambetov on https://www.youtube.com/watch?v=mjfgGJHAuvI&feature=youtu.be
  */
-public class SnakeGame extends Group implements DistanceChangeListener {
+public class SnakeGame extends Pane implements DistanceChangeListener {
+
+    private static final Logger logger = LogManager.getLogger(SnakeGame.class);
 
     private Point3D dir = new Point3D(1, 0, 0);
     private Point3D next = new Point3D(0, 0, 0);
-    
+
     private double t = 0;
     private final AnimationTimer timer;
 
@@ -30,21 +36,41 @@ public class SnakeGame extends Group implements DistanceChangeListener {
 
     private Random random = new Random();
 
-    public SnakeGame() {
+    public SnakeGame(int width, int height) {
+        this.setStyle("-fx-background-color: green;");
+        this.setMinWidth(width);
+        this.setMinHeight(height);
+
         this.snake = new Group();
         Cube cube = new Cube(Color.BLUE);
         snake.getChildren().add(cube);
 
-
         this.getChildren().addAll(snake, food);
 
-        SubScene scene3d = new SubScene(this, 400, 400);
+        SubScene scene3d = new SubScene(this, width, height);
         scene3d.setFill(Color.rgb(10, 10, 40));
+        scene3d.setOnKeyPressed(e -> {
+            logger.info("Key press in 3D scene: {}", e.getCode());
+            switch (e.getCode()) {
+                case UP:
+                    dir = new Point3D(0, -1, 0);
+                    break;
+                case DOWN:
+                    dir = new Point3D(0, 1, 0);
+                    break;
+                case LEFT:
+                    dir = new Point3D(-1, 0, 0);
+                    break;
+                case RIGHT:
+                    dir = new Point3D(1, 0, 0);
+                    break;
+            }
+        });
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
-        camera.getTransforms().addAll(
+        /*camera.getTransforms().addAll(
                 new Translate(0, -20, -20),
-                new Rotate(-45, Rotate.X_AXIS));
+                new Rotate(-45, Rotate.X_AXIS));*/
         scene3d.setCamera(camera);
 
         this.timer = new AnimationTimer() {
@@ -85,12 +111,9 @@ public class SnakeGame extends Group implements DistanceChangeListener {
                 .anyMatch(c -> c.isColliding(food));
 
         if (collision) {
-
+            this.grow();
         }
-
-
     }
-
 
     @Override
     public void handleDistanceChange(DistanceSensor distanceSensor, DistanceChange distanceChange, float distance) {

@@ -11,5 +11,4 @@ public interface DistanceChangeListener {
     }
 
     void handleDistanceChange(DistanceSensor distanceSensor, DistanceChange distanceChange, float distance);
-
 }

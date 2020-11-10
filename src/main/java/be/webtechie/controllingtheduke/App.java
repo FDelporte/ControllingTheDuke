@@ -36,7 +36,6 @@ public class App extends Application {
         });
     }
 
-
     @Override
     public void start(Stage stage) {
         Platform.setImplicitExit(true);
@@ -49,7 +48,7 @@ public class App extends Application {
             this.gpioHelper.addListener(this.mainScreen);
         }
 
-        var scene = new Scene(this.mainScreen, 640, 480);
+        var scene = new Scene(this.mainScreen, 1024, 800);
         stage.setScene(scene);
         stage.setTitle("JavaFX demo application on Raspberry Pi");
         stage.show();
